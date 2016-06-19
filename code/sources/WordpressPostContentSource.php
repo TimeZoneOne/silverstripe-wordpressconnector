@@ -68,7 +68,7 @@ class WordpressPostContentSource extends WordpressContentSource
                 '<p>The Wordpress connector requires the blog module to import posts.</p>'
             ));
         } else {
-            $blogs = BlogHolder::get();
+            $blogs = Blog::get();
             $map = $blogs ? $blogs->map() : array();
 
             $fields->addFieldsToTab('Root.Import', array(
