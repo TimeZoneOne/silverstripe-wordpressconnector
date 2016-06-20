@@ -154,6 +154,7 @@ class WordpressPostTransformer extends WordpressPageTransformer
         $post->OriginalData = serialize($properties);
         $post->OriginalLink = isset($properties['Link']) ? $properties['Link'] : null;
         $post->write();
+        $post->publish('Live', 'Stage');
 
         // Import comments across from the wordpress site.
         if (isset($params['ImportComments'])) {
