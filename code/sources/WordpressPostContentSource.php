@@ -92,6 +92,6 @@ class WordpressPostContentSource extends WordpressContentSource
 
     public function canImport()
     {
-        return class_exists('BlogEntry');
+        return class_exists('BlogPost');
     }
 }
