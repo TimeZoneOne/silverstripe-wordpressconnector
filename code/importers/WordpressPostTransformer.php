@@ -141,8 +141,8 @@ class WordpressPostTransformer extends WordpressPageTransformer
 
         $post->Content         = $this->wpautop($item->Description . $item->TextMore);
     
-        $post->Date            = date('Y-m-d H:i:s', $item->CreatedAt);
-        $post->Author          = $item->AuthorName;
+        $post->PublishDate            = date('Y-m-d H:i:s', $item->CreatedAt);
+        $post->AuthorNames          = $item->AuthorName;
         $post->Tags            = implode(', ', $item->Categories->map('Name', 'Name'));
         $post->URLSegment      = $item->Slug;
         $post->ParentID        = $parent->ID;
