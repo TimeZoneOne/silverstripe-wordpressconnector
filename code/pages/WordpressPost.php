@@ -4,7 +4,7 @@
  *
  * @package silverstripe-wordpressconnector
  */
-class WordpressPost extends BlogEntry
+class WordpressPost extends BlogPost
 {
 
     private static $db = array(
@@ -27,6 +27,6 @@ class WordpressPost extends BlogEntry
     }
 }
 
-class WordpressPost_Controller extends BlogEntry_Controller
+class WordpressPost_Controller extends BlogPost_Controller
 {
 }

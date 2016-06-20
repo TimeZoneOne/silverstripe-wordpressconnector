@@ -96,7 +96,7 @@ class WordpressPostContentItem extends ExternalContentItem
             'Value' => 'Value'
         ));
 
-        if (!class_exists('BlogEntry')) {
+        if (!class_exists('BlogPost')) {
             $fields->addFieldToTab('Root.Import', new LiteralField(
                 'RequiresBlogImport',
                 '<p>The Wordpress connector requires the blog module to import posts.</p>'
@@ -118,7 +118,7 @@ class WordpressPostContentItem extends ExternalContentItem
 
     public function canImport()
     {
-        return class_exists('BlogEntry');
+        return class_exists('BlogPost');
     }
     
     public function getType()
