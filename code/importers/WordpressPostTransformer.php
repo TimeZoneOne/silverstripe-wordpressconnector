@@ -156,7 +156,7 @@ class WordpressPostTransformer extends WordpressPageTransformer
         $post->write();
 
         if ($item->FeaturedImage) {
-            $this->FeaturedImage($item, $post);
+            $this->importFeaturedImage($item, $post);
         }
 
         // Import comments across from the wordpress site.

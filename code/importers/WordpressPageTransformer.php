@@ -119,9 +119,7 @@ class WordpressPageTransformer implements ExternalContentTransformer
         $folder  = $params['AssetsPath'];
 
         if ($folder) {
-            $folderId = Folder::find_or_make($folder)->ID;
-        } else {
-            return;
+            $folderObj = Folder::find_or_make($folder);
         }
 
         if (!$contents = @file_get_contents($source)) {
@@ -129,15 +127,15 @@ class WordpressPageTransformer implements ExternalContentTransformer
         }
 
         $imageInfo = pathinfo($source);
-        $name = $imageInfo['filename'];
+        $name = $imageInfo['basename'];
         $path = Controller::join_links(ASSETS_PATH, $folder, $name);
         file_put_contents($path, $contents);
 
         $array['OwnerID'] = Member::currentUserID() ? Member::currentUserID() : 0;
         $array['Name'] = $name;
-        $array['Title'] = Controller::join_links(ASSETS_PATH, $folder, $array['Name']);
-        $array['Filename'] = $imageInfo['basename'];
-        $array['ParentID'] = $folderId;
+        $array['Title'] = $name;
+        $array['Filename'] = Controller::join_links($folderObj->Filename, $name);
+        $array['ParentID'] = $folderObj->ID;
 
         $image = new Image($array);
         $imageID = $image->write();
