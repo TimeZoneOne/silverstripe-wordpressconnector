@@ -49,6 +49,17 @@ class WordpressPostContentSource extends WordpressContentSource
         }
 
         foreach ($posts as $post) {
+            if(array_key_exists('wp_post_thumbnail', $post) && $post['wp_post_thumbnail']) {
+                try {
+                    $client = $this->getClient();
+                    $post['wp_post_thumbnail'] = $client->call('wp.getMediaItem', array(
+                        $this->BlogId, $this->Username, $this->Password, $post['wp_post_thumbnail']
+                    ));
+                } catch (Zend_Exception $exception) {
+                    SS_Log::log($exception, SS_Log::ERR);
+                }
+            }
+
             $result->push(WordpressPostContentItem::factory($this, $post));
         }
 

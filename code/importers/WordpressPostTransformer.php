@@ -154,7 +154,10 @@ class WordpressPostTransformer extends WordpressPageTransformer
         $post->OriginalData = serialize($properties);
         $post->OriginalLink = isset($properties['Link']) ? $properties['Link'] : null;
         $post->write();
-        $post->publish('Live', 'Stage');
+
+        if ($item->FeaturedImage) {
+            $this->FeaturedImage($item, $post);
+        }
 
         // Import comments across from the wordpress site.
         if (isset($params['ImportComments'])) {
@@ -165,6 +168,8 @@ class WordpressPostTransformer extends WordpressPageTransformer
         if (isset($params['ImportMedia'])) {
             $this->importMedia($item, $post);
         }
+
+        $post->publish('Live', 'Stage');
     }
 
     protected function importComments($item, $post)
