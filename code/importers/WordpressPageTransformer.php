@@ -112,4 +112,35 @@ class WordpressPageTransformer implements ExternalContentTransformer
         Filesystem::sync($folderId);
         $page->write();
     }
+    
+    protected function importFeaturedImage($item, $page) {
+        $source = $item->FeaturedImage;
+        $params  = $this->importer->getParams();
+        $folder  = $params['AssetsPath'];
+
+        if ($folder) {
+            $folderObj = Folder::find_or_make($folder);
+        }
+
+        if (!$contents = @file_get_contents($source)) {
+            return;
+        }
+
+        $imageInfo = pathinfo($source);
+        $name = $imageInfo['basename'];
+        $path = Controller::join_links(ASSETS_PATH, $folder, $name);
+        file_put_contents($path, $contents);
+
+        $array['OwnerID'] = Member::currentUserID() ? Member::currentUserID() : 0;
+        $array['Name'] = $name;
+        $array['Title'] = $name;
+        $array['Filename'] = Controller::join_links($folderObj->Filename, $name);
+        $array['ParentID'] = $folderObj->ID;
+
+        $image = new Image($array);
+        $imageID = $image->write();
+
+        $page->FeaturedImageID = $imageID;
+        $page->write();
+    }
 }

@@ -49,6 +49,17 @@ class WordpressPostContentSource extends WordpressContentSource
         }
 
         foreach ($posts as $post) {
+            if(array_key_exists('wp_post_thumbnail', $post) && $post['wp_post_thumbnail']) {
+                try {
+                    $client = $this->getClient();
+                    $post['wp_post_thumbnail'] = $client->call('wp.getMediaItem', array(
+                        $this->BlogId, $this->Username, $this->Password, $post['wp_post_thumbnail']
+                    ));
+                } catch (Zend_Exception $exception) {
+                    SS_Log::log($exception, SS_Log::ERR);
+                }
+            }
+
             $result->push(WordpressPostContentItem::factory($this, $post));
         }
 
@@ -68,7 +79,7 @@ class WordpressPostContentSource extends WordpressContentSource
                 '<p>The Wordpress connector requires the blog module to import posts.</p>'
             ));
         } else {
-            $blogs = BlogHolder::get();
+            $blogs = Blog::get();
             $map = $blogs ? $blogs->map() : array();
 
             $fields->addFieldsToTab('Root.Import', array(
@@ -92,6 +103,6 @@ class WordpressPostContentSource extends WordpressContentSource
 
     public function canImport()
     {
-        return class_exists('BlogEntry');
+        return class_exists('BlogPost');
     }
 }

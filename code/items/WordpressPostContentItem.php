@@ -29,6 +29,7 @@ class WordpressPostContentItem extends ExternalContentItem
         $item->AuthorName    = $data['wp_author_display_name'];
         $item->Status        = $data['post_status'];
         $item->PostFormat    = isset($data['wp_post_format']) ? $data['wp_post_format'] : '';
+        $item->FeaturedImage = isset($data['wp_post_thumbnail']['link']) ? $data['wp_post_thumbnail']['link'] : '';
 
         if (isset($data['sticky'])) {
             $item->Sticky = $data['sticky'];
@@ -96,7 +97,7 @@ class WordpressPostContentItem extends ExternalContentItem
             'Value' => 'Value'
         ));
 
-        if (!class_exists('BlogEntry')) {
+        if (!class_exists('BlogPost')) {
             $fields->addFieldToTab('Root.Import', new LiteralField(
                 'RequiresBlogImport',
                 '<p>The Wordpress connector requires the blog module to import posts.</p>'
@@ -118,7 +119,7 @@ class WordpressPostContentItem extends ExternalContentItem
 
     public function canImport()
     {
-        return class_exists('BlogEntry');
+        return class_exists('BlogPost');
     }
     
     public function getType()

@@ -141,8 +141,8 @@ class WordpressPostTransformer extends WordpressPageTransformer
 
         $post->Content         = $this->wpautop($item->Description . $item->TextMore);
     
-        $post->Date            = date('Y-m-d H:i:s', $item->CreatedAt);
-        $post->Author          = $item->AuthorName;
+        $post->PublishDate            = date('Y-m-d H:i:s', $item->CreatedAt);
+        $post->AuthorNames          = $item->AuthorName;
         $post->Tags            = implode(', ', $item->Categories->map('Name', 'Name'));
         $post->URLSegment      = $item->Slug;
         $post->ParentID        = $parent->ID;
@@ -155,6 +155,10 @@ class WordpressPostTransformer extends WordpressPageTransformer
         $post->OriginalLink = isset($properties['Link']) ? $properties['Link'] : null;
         $post->write();
 
+        if ($item->FeaturedImage) {
+            $this->importFeaturedImage($item, $post);
+        }
+
         // Import comments across from the wordpress site.
         if (isset($params['ImportComments'])) {
             $this->importComments($item, $post);
@@ -164,6 +168,8 @@ class WordpressPostTransformer extends WordpressPageTransformer
         if (isset($params['ImportMedia'])) {
             $this->importMedia($item, $post);
         }
+
+        $post->publish('Live', 'Stage');
     }
 
     protected function importComments($item, $post)
